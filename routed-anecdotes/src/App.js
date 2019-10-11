@@ -4,7 +4,7 @@ import {
   Route, Link, Redirect, withRouter
 } from 'react-router-dom'
 
-const Menu = () => {
+const Menu = ({anecdotes}) => {
   const padding = {
     paddingRight: 5
   }
@@ -16,9 +16,9 @@ const Menu = () => {
         <Link to='/create' style={padding}>create new</Link>
         <Link to='/about' style={padding}>about</Link>
         </div>
-        <Router exact path='/' render={() => <AnecdoteList />} />
+        <Route exact path='/' render={() => <AnecdoteList anecdotes={anecdotes} />} />
         <Route path='/create' render={() => <CreateNew />} />
-        <Router path='/about' render={() => <About />} />
+        <Route path='/about' render={() => <About />} />
       </Router>
     </div>
 
@@ -138,11 +138,11 @@ const App = () => {
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Menu />
-      <AnecdoteList anecdotes={anecdotes} />
+      <Menu anecdotes={anecdotes}/>
+      {/* <AnecdoteList anecdotes={anecdotes} />
       <About />
       <CreateNew addNew={addNew} />
-      <Footer />
+      <Footer /> */}
     </div>
   )
 }
