@@ -4,7 +4,7 @@ import {
   Route, Link, Redirect, withRouter
 } from 'react-router-dom'
 
-const Menu = ({anecdotes}) => {
+const Menu = ({anecdotes, noteById}) => {
   const padding = {
     paddingRight: 5
   }
@@ -19,6 +19,10 @@ const Menu = ({anecdotes}) => {
         <Route exact path='/' render={() => <AnecdoteList anecdotes={anecdotes} />} />
         <Route path='/create' render={() => <CreateNew />} />
         <Route path='/about' render={() => <About />} />
+        <Route exact path="/anecdotes/:id" render={({ match }) =>
+          <Anecdote anecdote={anecdotes.find(a => a.id === match.params.id)
+        } />
+      } />
       </Router>
     </div>
 
@@ -26,11 +30,25 @@ const Menu = ({anecdotes}) => {
   )
 }
 
+const Anecdote = ({anecdote}) => {
+  console.log('ANECDOTE', anecdote)
+  return(
+    <div>
+      <h2>{anecdote.content}</h2>
+      <div>has {anecdote.votes} votes</div>
+      <div>for more info see : <a href={anecdote.info}>{anecdote.info}</a></div> 
+    </div>
+  )
+}
+
 const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {anecdotes.map(anecdote => 
+      <li key={anecdote.id} >
+        <Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link>
+      </li>)}
     </ul>
   </div>
 )
@@ -139,10 +157,7 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu anecdotes={anecdotes}/>
-      {/* <AnecdoteList anecdotes={anecdotes} />
-      <About />
-      <CreateNew addNew={addNew} />
-      <Footer /> */}
+      <Footer />
     </div>
   )
 }
