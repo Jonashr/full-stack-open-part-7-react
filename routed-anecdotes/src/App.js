@@ -4,7 +4,7 @@ import {
   Route, Link, Redirect, withRouter
 } from 'react-router-dom'
 
-const Menu = ({anecdotes, noteById}) => {
+const Menu = ({anecdotes, addNew, notification, setNotification}) => {
   const padding = {
     paddingRight: 5
   }
@@ -16,8 +16,9 @@ const Menu = ({anecdotes, noteById}) => {
         <Link to='/create' style={padding}>create new</Link>
         <Link to='/about' style={padding}>about</Link>
         </div>
+        <Notification notification={notification} />
         <Route exact path='/' render={() => <AnecdoteList anecdotes={anecdotes} />} />
-        <Route path='/create' render={() => <CreateNew />} />
+        <Route path='/create' render={() => <CreateNew addNew={addNew} setNotification={setNotification} />} />
         <Route path='/about' render={() => <About />} />
         <Route exact path="/anecdotes/:id" render={({ match }) =>
           <Anecdote anecdote={anecdotes.find(a => a.id === match.params.id)
@@ -75,12 +76,11 @@ const Footer = () => (
   </div>
 )
 
-const CreateNew = (props) => {
+let CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
-
-
+  
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
@@ -89,7 +89,11 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
-  }
+    props.history.push('/')
+    props.setNotification(`A new anecdote ${content}' was created`)
+    setTimeout(() => {
+      props.setNotification('')
+    }, 10000)  }
 
   return (
     <div>
@@ -111,8 +115,21 @@ const CreateNew = (props) => {
       </form>
     </div>
   )
-
 }
+
+CreateNew = withRouter(CreateNew)
+
+const Notification = ({notification}) => {
+
+
+  return (
+    <div>
+      {notification}
+    </div>
+  )
+}
+
+
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
@@ -139,6 +156,7 @@ const App = () => {
     setAnecdotes(anecdotes.concat(anecdote))
   }
 
+
   const anecdoteById = (id) =>
     anecdotes.find(a => a.id === id)
 
@@ -156,10 +174,13 @@ const App = () => {
   return (
     <div>
       <h1>Software anecdotes</h1>
-      <Menu anecdotes={anecdotes}/>
+      <Menu anecdotes={anecdotes} addNew={addNew} setNotification={setNotification} notification={notification} />
       <Footer />
     </div>
   )
 }
+
+
+
 
 export default App;
