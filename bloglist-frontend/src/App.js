@@ -14,6 +14,7 @@ import {
   BrowserRouter as Router,
   Route, Link, Redirect, withRouter
 } from 'react-router-dom'
+import {Menu, Button} from 'semantic-ui-react'
 
 const App = () => {
   const title = useField('text')
@@ -192,10 +193,19 @@ const App = () => {
       <div>
         <Router>
           <div>
-            <Link style={padding} to='/'>blogs</Link>
-            <Link style={padding} to='/users'>users</Link>
-            {user.data.name} is currently logged in
-              <button onClick={() => handleLogout()}>logout</button>
+            <Menu color="blue" inverted>
+              <Menu.Item link>
+               <Link to='/'>blogs</Link>
+              </Menu.Item>
+              <Menu.Item users>
+                <Link to='/users'>users</Link>
+              </Menu.Item>
+              <Menu.Item content>
+                <em>{user.data.name} is currently logged in</em>
+                <Button onClick={() => handleLogout()}>logout</Button>
+              </Menu.Item>
+            </Menu>
+
           </div>
           <h2>Blog app</h2>
           <Notification notification={notification} />

@@ -1,25 +1,22 @@
 import React from 'react'
-import Blog from './Blog'
 import {Link} from 'react-router-dom'
+import {Table} from 'semantic-ui-react'
 
 const Blogs = ({blogs, handleLikeButton, handleDeleteButton, user}) => {
-    const blogStyle = {
-        paddingTop: 5,
-        paddingLeft: 2,
-        border: 'solid',
-        font: 'italic',
-        borderWidth: 2,
-        marginBottom: 10
-      }
-    
     return(
-        <div>
-          {blogs.map(blog => 
-            <div key={blog.id} style={blogStyle}>
-              <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-            </div>
-          )}
-        </div>
+      <div>
+        <Table striped celled>
+          <Table.Body>
+            {blogs.map(blog => 
+              <Table.Row key={blog.id}>
+                <Table.Cell>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                </Table.Cell>
+              </Table.Row>
+            )}
+           </Table.Body>
+         </Table>
+      </div>
     )
 }
 
