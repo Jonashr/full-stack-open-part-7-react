@@ -26,6 +26,8 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [notification, setNotification] = useState( { message: null, type: null })
   const [counter, setCounter] = useState(0)
+  const padding = { padding: 5, color: 'grey'}
+
 
 
   useEffect(() => {
@@ -189,14 +191,15 @@ const App = () => {
     return (
       <div>
         <Router>
-          <h2>Blogs</h2>
-          <Notification notification={notification} />
-          <h3>
+          <div>
+            <Link style={padding} to='/'>blogs</Link>
+            <Link style={padding} to='/users'>users</Link>
             {user.data.name} is currently logged in
-            <button onClick={() => handleLogout()}>logout</button>
-          </h3>
+              <button onClick={() => handleLogout()}>logout</button>
+          </div>
+          <h2>Blog app</h2>
+          <Notification notification={notification} />
           <Route exact path="/" render={() =>
-          
             [
               <h2>Create a new blog</h2>,
               <Togglable buttonLabel='New form'>
