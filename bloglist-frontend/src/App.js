@@ -3,11 +3,16 @@ import loginService from './services/login'
 import blogsService from './services/blogs'
 import usersService from './services/users'
 import Blog from './components/Blog'
+import Users from './components/Users'
 import User from './components/User'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import { useField } from './hooks'
+import {
+  BrowserRouter as Router,
+  Route, Link, Redirect, withRouter
+} from 'react-router-dom'
 
 const App = () => {
   const title = useField('text')
@@ -38,7 +43,7 @@ const App = () => {
       setUsers(response))
   }, [])
 
-  console.log('Users', users)
+  console.log('Users in App', users)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedInUser')
@@ -182,34 +187,31 @@ const App = () => {
   } else
     return (
       <div>
-        <h2>Blogs</h2>
-        <Notification notification={notification} />
-        <h3>
-          {user.data.name} is currently logged in
-          <button onClick={() => handleLogout()}>logout</button>
-        </h3>
-        <h2>Create a new blog</h2>
-        <Togglable buttonLabel='New form'>
-          <BlogForm
-            handleSubmit={handleNewBlog}
-            title={title}
-            author={author}
-            url={url} />
-        </Togglable>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} handleLikeButton={handleLikeButton} handleDeleteButton={handleDeleteButton} user={user} />)}
-        <h3>Users</h3>
-        <table>
-          <tbody>
-            <tr>
-              <th>User</th>
-              <th>Blogs created</th>
-            </tr>
-            {users.map(user => 
-            <User key={user.id} user={user} />)}
-          </tbody>
-        </table>
+        <Router>
 
+          <h2>Blogs</h2>
+          <Notification notification={notification} />
+          <h3>
+            {user.data.name} is currently logged in
+            <button onClick={() => handleLogout()}>logout</button>
+          </h3>
+          <h2>Create a new blog</h2>
+          <Togglable buttonLabel='New form'>
+            <BlogForm
+              handleSubmit={handleNewBlog}
+              title={title}
+              author={author}
+              url={url} />
+          </Togglable>
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} handleLikeButton={handleLikeButton} handleDeleteButton={handleDeleteButton} user={user} />)}
+          <Route exact path="/users">
+            <Users users={users} />
+          </Route>
+          <Route exact path="/users/:id" render={({ match }) =>
+            <User user={users.find(user => user.id === match.params.id)} />
+            } />
+        </Router>
       </div>
     )
 }
