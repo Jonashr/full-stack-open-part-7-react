@@ -7,15 +7,15 @@ const LoginForm = ({ handleLogin, username,password }) => {
     <div>
       <h1>Login</h1>
       <Form onSubmit={handleLogin} >
-        <Form.Field placeholder='Username'>
+        <Form.Field placeholder='Username' >
           <Icon name='user'><label>Username</label></Icon>
-          <Input placeholder='username' {...username} />
+          <Input id='username' placeholder='username' {...username} />
         </Form.Field>
         <Form.Field>
           <Icon name='lock'><label>Password</label></Icon>
-          <Input placeholder='password' {...password} />
+          <Input id='password' placeholder='password' {...password} />
         </Form.Field>
-        <Button type='submit'>Login</Button>
+        <Button type='submit'>login</Button>
       </Form>
     </div>)
 }

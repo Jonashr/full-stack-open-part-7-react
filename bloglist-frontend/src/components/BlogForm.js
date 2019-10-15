@@ -8,17 +8,17 @@ const BlogForm = ({ handleSubmit, title, author, url }) => {
       <Form onSubmit={handleSubmit}>
         <Form.Field>
           <label>Title</label>
-          <Input {...title} />
+          <Input id='title' {...title} />
         </Form.Field>
         <Form.Field>
           <label>Author</label>
-          <Input {...author} />
+          <Input id='author' {...author} />
         </Form.Field>
         <Form.Field>
           <label>Url</label>
-          <Input {...url} />
+          <Input id='url' {...url} />
         </Form.Field>
-        <Button type='submit'>Create</Button>
+        <Button id='create' type='submit'>Create</Button>
       </Form>
     </div>)
 }
