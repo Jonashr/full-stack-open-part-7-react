@@ -24,6 +24,14 @@ app.use(express.static('build'))
 app.use(bodyParser.json())
 app.use(middleware.tokenExtractor)
 
+console.log(process.env.NODE_ENV)
+
+if(process.env.NODE_ENV === 'development') {
+  console.log('testing environment ok.')
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/testing', testingRouter)
+}
+
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
