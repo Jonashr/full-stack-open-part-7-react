@@ -3,6 +3,7 @@ import loginService from './services/login'
 import blogsService from './services/blogs'
 import usersService from './services/users'
 import Blog from './components/Blog'
+import Blogs from './components/Blogs'
 import Users from './components/Users'
 import User from './components/User'
 import LoginForm from './components/LoginForm'
@@ -188,7 +189,6 @@ const App = () => {
     return (
       <div>
         <Router>
-
           <h2>Blogs</h2>
           <Notification notification={notification} />
           <h3>
@@ -196,15 +196,19 @@ const App = () => {
             <button onClick={() => handleLogout()}>logout</button>
           </h3>
           <h2>Create a new blog</h2>
-          <Togglable buttonLabel='New form'>
-            <BlogForm
-              handleSubmit={handleNewBlog}
-              title={title}
-              author={author}
-              url={url} />
-          </Togglable>
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} handleLikeButton={handleLikeButton} handleDeleteButton={handleDeleteButton} user={user} />)}
+          <Route exact path="/" render={() =>
+            [
+              <Togglable buttonLabel='New form'>
+                <BlogForm
+                  handleSubmit={handleNewBlog}
+                  title={title}
+                  author={author}
+                  url={url} />
+              </Togglable>,
+              <Blogs blogs={blogs} handleLikeButton={handleLikeButton} handleDeleteButton={handleDeleteButton} user={user} />
+            ]
+          }/>
+
           <Route exact path="/users">
             <Users users={users} />
           </Route>
