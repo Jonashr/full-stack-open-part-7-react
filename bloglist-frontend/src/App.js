@@ -195,9 +195,10 @@ const App = () => {
             {user.data.name} is currently logged in
             <button onClick={() => handleLogout()}>logout</button>
           </h3>
-          <h2>Create a new blog</h2>
           <Route exact path="/" render={() =>
+          
             [
+              <h2>Create a new blog</h2>,
               <Togglable buttonLabel='New form'>
                 <BlogForm
                   handleSubmit={handleNewBlog}
@@ -208,7 +209,9 @@ const App = () => {
               <Blogs blogs={blogs} handleLikeButton={handleLikeButton} handleDeleteButton={handleDeleteButton} user={user} />
             ]
           }/>
-
+          <Route exact path='/blogs/:id' render={({ match}) => 
+            <Blog blog={blogs.find(blog => blog.id === match.params.id)} handleLikeButton={handleLikeButton} user={user} />
+          } />
           <Route exact path="/users">
             <Users users={users} />
           </Route>
