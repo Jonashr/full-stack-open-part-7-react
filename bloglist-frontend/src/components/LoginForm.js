@@ -13,7 +13,7 @@ const LoginForm = ({ handleLogin, username,password }) => {
         </Form.Field>
         <Form.Field>
           <Icon name='lock'><label>Password</label></Icon>
-          <Input placeholder='password' {...password} />        
+          <Input placeholder='password' {...password} />
         </Form.Field>
         <Button type='submit'>Login</Button>
       </Form>

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {Form, Button, Input} from 'semantic-ui-react'
+import { Form, Button, Input } from 'semantic-ui-react'
 
 const BlogForm = ({ handleSubmit, title, author, url }) => {
   return(

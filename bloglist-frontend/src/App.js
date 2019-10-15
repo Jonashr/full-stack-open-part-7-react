@@ -12,9 +12,9 @@ import Togglable from './components/Togglable'
 import { useField } from './hooks'
 import {
   BrowserRouter as Router,
-  Route, Link, Redirect, withRouter
+  Route, Link,
 } from 'react-router-dom'
-import {Menu, Button} from 'semantic-ui-react'
+import { Menu, Button } from 'semantic-ui-react'
 
 const App = () => {
   const title = useField('text')
@@ -27,24 +27,21 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [notification, setNotification] = useState( { message: null, type: null })
   const [counter, setCounter] = useState(0)
-  const padding = { padding: 5, color: 'grey'}
-
-
 
   useEffect(() => {
-      blogsService
+    blogsService
       .getAll()
       .then(response => {
         setBlogs(response.sort((a, b) => a.likes - b.likes).reverse())
       })
-    }
+  }
   , [counter])
 
   useEffect(() => {
     usersService
-    .getAll()
-    .then(response => 
-      setUsers(response))
+      .getAll()
+      .then(response =>
+        setUsers(response))
   }, [])
 
   console.log('Users in App', users)
@@ -142,11 +139,11 @@ const App = () => {
     const searchedBlog = blogs.find(b => b.id === blogId)
 
     const newUpdatedBlog = {
-       user: searchedBlog.user.id,
-       likes: searchedBlog.likes + 1,
-       title: searchedBlog.title,
-       author: searchedBlog.author,
-       url: searchedBlog.url
+      user: searchedBlog.user.id,
+      likes: searchedBlog.likes + 1,
+      title: searchedBlog.title,
+      author: searchedBlog.author,
+      url: searchedBlog.url
     }
 
     console.log(newUpdatedBlog)
@@ -168,7 +165,7 @@ const App = () => {
       newBlogList.splice(indexOfDeletedBlog, 1)
 
       notify('Blog was removed from the notebook')
-       
+
       await blogsService.deleteItem(blogId)
       setCounter(counter + 1)
       setBlogs(newBlogList)
@@ -182,7 +179,7 @@ const App = () => {
       <div>
         <Notification notification={notification} />
         <Togglable buttonLabel='Login'>
-          <LoginForm 
+          <LoginForm
             handleLogin={handleLogin}
             username={username}
             password={password} />
@@ -195,7 +192,7 @@ const App = () => {
           <div>
             <Menu color="blue" inverted>
               <Menu.Item link>
-               <Link to='/'>blogs</Link>
+                <Link to='/'>blogs</Link>
               </Menu.Item>
               <Menu.Item users>
                 <Link to='/users'>users</Link>
@@ -210,19 +207,19 @@ const App = () => {
           <h2>Blog app</h2>
           <Notification notification={notification} />
           <Route exact path="/" render={() =>
-            [
-              <h2>Create a new blog</h2>,
+            <div>
+              <h2>Create a new blog</h2>
               <Togglable buttonLabel='New form'>
                 <BlogForm
                   handleSubmit={handleNewBlog}
                   title={title}
                   author={author}
                   url={url} />
-              </Togglable>,
+              </Togglable>
               <Blogs blogs={blogs} handleLikeButton={handleLikeButton} handleDeleteButton={handleDeleteButton} user={user} />
-            ]
+            </div>
           }/>
-          <Route exact path='/blogs/:id' render={({ match}) => 
+          <Route exact path='/blogs/:id' render={({ match }) =>
             <Blog blog={blogs.find(blog => blog.id === match.params.id)} handleLikeButton={handleLikeButton} user={user} />
           } />
           <Route exact path="/users">
@@ -230,7 +227,7 @@ const App = () => {
           </Route>
           <Route exact path="/users/:id" render={({ match }) =>
             <User user={users.find(user => user.id === match.params.id)} />
-            } />
+          } />
         </Router>
       </div>
     )
