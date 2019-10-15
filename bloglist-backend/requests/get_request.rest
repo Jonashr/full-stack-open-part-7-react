@@ -1,0 +1,10 @@
+PUT http://localhost:3003/api/blogs/5d8051ece761e025281469cd
+Content-Type: application/json
+
+{
+    "title": "How to bobby",
+    "author": "Bob Bobbyson",
+    "url": "http://Something.com",
+    "likes": 15
+}
+

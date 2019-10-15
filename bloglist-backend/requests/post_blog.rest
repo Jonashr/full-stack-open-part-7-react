@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs/
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXJuYW1lMTIzNCIsImlkIjoiNWQ4NmRmNzUxOGE2ZWQ0NWQ4YzBkMjZmIiwiaWF0IjoxNTY5MTQzNDU1fQ.MhijzyVsgHvCViF4kcFIJeLlO9s7IXMVm5d7IpKuQUQ
+
+{
+    "url": "Url goes here",
+    "author": "Bob Bobbyson",
+    "likes": 15
+}
+
