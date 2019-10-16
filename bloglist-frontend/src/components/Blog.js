@@ -1,9 +1,13 @@
 import React from'react'
+import { Table } from 'semantic-ui-react'
+
 
 const Blog = ({ blog, handleLikeButton, handleDeleteButton, user }) => {
   if(blog === undefined) {
     return null
   }
+
+  console.log(blog.comments)
 
   return (
     <div>
@@ -16,7 +20,14 @@ const Blog = ({ blog, handleLikeButton, handleDeleteButton, user }) => {
       {blog.user !== undefined && blog.user.username === user.data.username &&
         <div><button onClick={handleDeleteButton} value={blog.id}>delete</button></div>
       }
-    </div>
+      <div>
+      <br />
+      <h2>Comments</h2>
+      {blog.comments.map(comment => <div>{comment}</div>)}
+
+      </div>
+
+  </div>
   )
 }
 
