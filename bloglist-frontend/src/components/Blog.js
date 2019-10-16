@@ -1,8 +1,9 @@
 import React from'react'
-import { Table } from 'semantic-ui-react'
+import Togglable from './Togglable'
+import CommentForm from './CommentForm'
 
 
-const Blog = ({ blog, handleLikeButton, handleDeleteButton, user }) => {
+const Blog = ({ blog, handleLikeButton, handleDeleteButton, user, addComment, newComment }) => {
   if(blog === undefined) {
     return null
   }
@@ -23,8 +24,14 @@ const Blog = ({ blog, handleLikeButton, handleDeleteButton, user }) => {
       <div>
       <br />
       <h2>Comments</h2>
+      <Togglable buttonLabel='Add comment'>
+          <CommentForm
+            handleSubmit={addComment}
+            comment={newComment}
+            blog={blog}
+          />
+      </Togglable>
       {blog.comments.map(comment => <div>{comment}</div>)}
-
       </div>
 
   </div>

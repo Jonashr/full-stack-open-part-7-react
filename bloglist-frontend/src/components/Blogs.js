@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Table } from 'semantic-ui-react'
 
-const Blogs = ({ blogs, handleLikeButton, handleDeleteButton, user }) => {
+const Blogs = ({ blogs, handleLikeButton, handleDeleteButton, addComment, user }) => {
   return(
     <div>
       <Table striped celled>

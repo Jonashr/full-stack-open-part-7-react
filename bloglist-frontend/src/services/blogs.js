@@ -25,6 +25,24 @@ const create = async newObject => {
   }
 }
 
+const createComment = async (newObject, id) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  try {
+    const response = await axios.post(`${baseUrl}/${id}/comments`, newObject, config)
+    console.log(response)
+    return response.data
+  } catch(error) {
+    if(error.response.status === 401) {
+      throw new Error('User not authorized to post comments.')
+    } else {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+}
+
 const update = async (id, newObject) => {
   console.log('new object', newObject)
   const response = await axios.put(`${baseUrl}/${id}`, newObject)
@@ -45,4 +63,4 @@ const deleteItem = async id => {
   return response.data
 }
 
-export default { getAll, setToken, create, update, deleteItem }
+export default { getAll, setToken, create, update, deleteItem, createComment }

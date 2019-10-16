@@ -22,6 +22,7 @@ const App = () => {
   const url = useField('text')
   const username = useField('text')
   const password = useField('password')
+  const comment = useField('text')
   const [user, setUser] = useState(null)
   const [users, setUsers] = useState([])
   const [blogs, setBlogs] = useState([])
@@ -85,6 +86,7 @@ const App = () => {
     setTimeout(() => setNotification({ message: null, type: null }), 3000)
   }
 
+
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -112,6 +114,21 @@ const App = () => {
     console.log('Handle logout, username', username)
     setUser(null)
   }
+
+  const handleNewComment = async (event) => {
+    event.preventDefault()
+    console.log('Event value', event.target.children[1].value, comment)
+    const blogId = event.target.children[1].value
+    const searchedBlog = blogs.find(b => b.id === blogId)
+    console.log('Searched blog goes here..', searchedBlog, blogId)
+    searchedBlog.comments = searchedBlog.comments.concat(comment.value)
+    console.log('SEARCHED BLOG AFTER NEW COMMENTS', searchedBlog)
+
+    await blogsService.createComment(searchedBlog, blogId)
+    setBlogs(blogs.map(blog => blog.id !== searchedBlog.id ? blog : searchedBlog))
+
+  }
+
 
   const handleNewBlog = async (event) => {
     event.preventDefault()
@@ -220,7 +237,7 @@ const App = () => {
             </div>
           }/>
           <Route exact path='/blogs/:id' render={({ match }) =>
-            <Blog blog={blogs.find(blog => blog.id === match.params.id)} handleLikeButton={handleLikeButton} user={user} />
+            <Blog blog={blogs.find(blog => blog.id === match.params.id)} handleLikeButton={handleLikeButton} addComment={handleNewComment} newComment={comment} user={user} />
           } />
           <Route exact path="/users">
             <Users users={users} />
