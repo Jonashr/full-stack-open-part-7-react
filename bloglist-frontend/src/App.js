@@ -18,6 +18,7 @@ import { Menu, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
 import Notification from './components/Notification'
+import { initializeBlogs } from './reducers/blogReducer'
 
 const App = (props) => {
   const title = useField('text')
@@ -32,13 +33,9 @@ const App = (props) => {
   const [counter, setCounter] = useState(0)
 
   useEffect(() => {
-    blogsService
-      .getAll()
-      .then(response => {
-        setBlogs(response.sort((a, b) => a.likes - b.likes).reverse())
-      })
-  }
-  , [counter])
+    console.log('App props', props)
+    props.initializeBlogs()
+  }, [counter])
 
   useEffect(() => {
     usersService
@@ -141,7 +138,7 @@ const App = (props) => {
   const handleLikeButton = async (event) => {
     event.preventDefault()
     const blogId = event.target.value
-    const searchedBlog = blogs.find(b => b.id === blogId)
+    const searchedBlog = props.blogs.find(b => b.id === blogId)
 
     const newUpdatedBlog = {
       user: searchedBlog.user.id,
@@ -221,11 +218,11 @@ const App = (props) => {
                   author={author}
                   url={url} />
               </Togglable>
-              <Blogs blogs={blogs} handleLikeButton={handleLikeButton} handleDeleteButton={handleDeleteButton} user={user} />
+              <Blogs />
             </div>
           }/>
           <Route exact path='/blogs/:id' render={({ match }) =>
-            <Blog blog={blogs.find(blog => blog.id === match.params.id)} handleLikeButton={handleLikeButton} addComment={handleNewComment} newComment={comment} user={user} />
+            <Blog blog={props.blogs.find(blog => blog.id === match.params.id)} blogid={match.params.id} handleLikeButton={handleLikeButton} addComment={handleNewComment} newComment={comment} user={user} />
           } />
           <Route exact path="/users">
             <Users users={users} />
@@ -239,7 +236,13 @@ const App = (props) => {
 }
 
 const mapDispatchToProps = {
-  setNotification
+  setNotification, initializeBlogs
 }
 
-export default connect(null, mapDispatchToProps)(App)
+const mapStateToProps = (state) => {
+  return {
+    blogs: state.blogs
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)

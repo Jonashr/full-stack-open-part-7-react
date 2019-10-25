@@ -1,33 +1,38 @@
 import React from'react'
 import Togglable from './Togglable'
 import CommentForm from './CommentForm'
+import { connect } from 'react-redux'
+import { likeBlog } from '../reducers/blogReducer'
 
 
-const Blog = ({ blog, handleLikeButton, handleDeleteButton, user, addComment, newComment }) => {
+
+const Blog = (props) => {
+  console.log('props in blog', props)
+
+  const blog = props.blogs.find(bl => props.blogid === bl.id)
+
   if(blog === undefined) {
     return null
   }
-
-  console.log(blog.comments)
 
   return (
     <div>
       <h3>{blog.title} {blog.author}</h3>
       <div>{blog.url}</div>
-      <div>{blog.likes} likes<button onClick={handleLikeButton} value={blog.id}>like</button></div>
+      <div>{blog.likes} likes<button onClick={() => props.likeBlog(blog, blog.id)} value={blog.id}>like</button></div>
       {blog.user !== undefined && blog.user.name !== undefined &&
             <div>{blog.user.name}</div>
       }
-      {blog.user !== undefined && blog.user.username === user.data.username &&
-        <div><button onClick={handleDeleteButton} value={blog.id}>delete</button></div>
+      {blog.user !== undefined && blog.user.username === props.user.data.username &&
+        <div><button onClick={props.handleDeleteButton} value={blog.id}>delete</button></div>
       }
       <div>
         <br />
         <h2>Comments</h2>
         <Togglable buttonLabel='Add comment'>
           <CommentForm
-            handleSubmit={addComment}
-            comment={newComment}
+            handleSubmit={props.addComment}
+            comment={props.newComment}
             blog={blog}
           />
         </Togglable>
@@ -39,4 +44,16 @@ const Blog = ({ blog, handleLikeButton, handleDeleteButton, user, addComment, ne
   )
 }
 
-export default Blog
+const mapStateToProps = (state) => {
+  console.log('Blog state', state)
+  return {
+    blogs: state.blogs
+  }
+}
+
+const mapDispatchToProps = {
+  likeBlog
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Blog)
