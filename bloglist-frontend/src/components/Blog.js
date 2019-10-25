@@ -22,19 +22,20 @@ const Blog = ({ blog, handleLikeButton, handleDeleteButton, user, addComment, ne
         <div><button onClick={handleDeleteButton} value={blog.id}>delete</button></div>
       }
       <div>
-      <br />
-      <h2>Comments</h2>
-      <Togglable buttonLabel='Add comment'>
+        <br />
+        <h2>Comments</h2>
+        <Togglable buttonLabel='Add comment'>
           <CommentForm
             handleSubmit={addComment}
             comment={newComment}
             blog={blog}
           />
-      </Togglable>
-      {blog.comments.map(comment => <div>{comment}</div>)}
+        </Togglable>
+        {console.log(blog.comments) }
+        {blog.comments.map(comment => <div>{comment}</div>)}
       </div>
 
-  </div>
+    </div>
   )
 }
 

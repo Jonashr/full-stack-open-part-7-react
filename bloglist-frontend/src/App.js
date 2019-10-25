@@ -15,8 +15,11 @@ import {
   Route, Link,
 } from 'react-router-dom'
 import { Menu, Button } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { setNotification } from './reducers/notificationReducer'
+import Notification from './components/Notification'
 
-const App = () => {
+const App = (props) => {
   const title = useField('text')
   const author = useField('text')
   const url = useField('text')
@@ -26,7 +29,6 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [users, setUsers] = useState([])
   const [blogs, setBlogs] = useState([])
-  const [notification, setNotification] = useState( { message: null, type: null })
   const [counter, setCounter] = useState(0)
 
   useEffect(() => {
@@ -59,31 +61,17 @@ const App = () => {
     }
   }, [counter])
 
-  // This method is pretty much copy pasted from the exercise solution.
 
-  const Notification = ({ notification }) => {
-    if(notification.message === null) {
-      return null
-    }
 
-    const notificationStyling = {
-      color: notification.type === 'error' ? 'red' : 'green',
-      fontStyle: 'italic',
-      fontSize: 25,
-      borderStyle: 'solid',
-      borderRadius: 5
-    }
-
-    return(
-      <div style={notificationStyling}>
-        {notification.message}
-      </div>
-    )
-  }
 
   const notify = (message, type) => {
-    setNotification({ message, type })
-    setTimeout(() => setNotification({ message: null, type: null }), 3000)
+    const notification = {
+      message: message,
+      type: type
+    }
+    console.log('Props in notify', props)
+
+    props.setNotification(notification, 5000)
   }
 
 
@@ -194,7 +182,7 @@ const App = () => {
   if(user === null) {
     return(
       <div>
-        <Notification notification={notification} />
+        <Notification  />
         <Togglable buttonLabel='Login'>
           <LoginForm
             handleLogin={handleLogin}
@@ -222,7 +210,7 @@ const App = () => {
 
           </div>
           <h2>Blog app</h2>
-          <Notification notification={notification} />
+          <Notification />
           <Route exact path="/" render={() =>
             <div>
               <h2>Create a new blog</h2>
@@ -250,4 +238,8 @@ const App = () => {
     )
 }
 
-export default App
+const mapDispatchToProps = {
+  setNotification
+}
+
+export default connect(null, mapDispatchToProps)(App)
