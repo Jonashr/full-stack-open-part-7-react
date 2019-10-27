@@ -11,11 +11,12 @@ const blogReducer = (state = [], action) => {
   }
   case 'LIKE': {
     const updatedBlog = action.data
-    console.log('Updated blog...', updatedBlog)
     return state.map(blog => blog.id !== updatedBlog.id ? blog : updatedBlog)
   }
   case 'DELETE': {
-    return state.filter(blog => blog.id !== action.data.id)
+    console.log('Hello from delete...')
+    console.log('Filter state..', state.filter(blog => blog.id !== action.data))
+    return state.filter(blog => blog.id !== action.data)
   }
 
   default: {
@@ -81,8 +82,5 @@ export const addComment = (blog, id) => {
     })
   }
 }
-
-
-
 
 export default blogReducer

@@ -12,7 +12,7 @@ import Togglable from './components/Togglable'
 import { useField } from './hooks'
 import {
   BrowserRouter as Router,
-  Route, Link, withRouter
+  Route, Link
 } from 'react-router-dom'
 import { Menu, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
@@ -41,6 +41,8 @@ const App = (props) => {
       .then(response =>
         setUsers(response))
   }, [])
+
+  console.log('State in app..', props)
 
 
   useEffect(() => {
@@ -156,7 +158,6 @@ const App = (props) => {
     )
 }
 
-const WithBlog = withRouter(Blog)
 
 const mapDispatchToProps = {
   setNotification, initializeBlogs

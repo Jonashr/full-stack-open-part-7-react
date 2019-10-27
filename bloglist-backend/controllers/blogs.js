@@ -20,7 +20,7 @@ blogsRouter.post('/', async (request, response, next) => {
     }
 
     const user = await User.findById(decodedToken.id)
-    console.log('made it here ?????????/')
+    console.log('made it here ?????????/ check user', user)
     const blog = new Blog ({
       title: body.title,
       author: body.author,
@@ -82,6 +82,8 @@ blogsRouter.put('/:id', async (request, response, next) => {
   const body = request.body
 
   const user = await User.findById(body.user.id)
+
+  console.log('user in put', body)
 
   const blog = {
     title: body.title,

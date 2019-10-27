@@ -1,8 +1,10 @@
 import React from'react'
 import Togglable from './Togglable'
 import CommentForm from './CommentForm'
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { likeBlog, deleteBlog } from '../reducers/blogReducer'
+import { setNotification } from '../reducers/notificationReducer'
 
 const Blog = (props) => {
   const blog = props.blogs.find(bl => props.blogid === bl.id)
@@ -20,7 +22,7 @@ const Blog = (props) => {
             <div>{blog.user.name}</div>
       }
       {blog.user !== undefined && blog.user.username === props.user.data.username &&
-        <div><button onClick={() => props.deleteBlog(blog.id).then(props.history.push('/'))}>delete</button></div>
+        <div><button onClick={() => props.deleteBlog(blog.id).then(props.setNotification({ message: `Blog ${blog.title} was removed`, type: 'notification' }, 5000)).then(props.history.push('/'))}>delete</button></div>
       }
       <div>
         <br />
@@ -48,8 +50,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-  likeBlog, deleteBlog
+  likeBlog, deleteBlog, setNotification
 }
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(Blog)
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Blog))
