@@ -8,7 +8,6 @@ const Blogs = (props) => {
     return null
   }
 
-  console.log('BLOGSSSS', props)
 
   return(
     <div>
@@ -28,7 +27,6 @@ const Blogs = (props) => {
 }
 
 const mapStateToProps = (state) => {
-  console.log('State in blogs', state)
   return {
     blogs: state.blogs
   }

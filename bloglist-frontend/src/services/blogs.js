@@ -17,11 +17,7 @@ const create = async newObject => {
     const response = await axios.post(baseUrl, newObject, config)
     return response.data
   } catch(error) {
-    if(error.response.status === 401) {
-      throw new Error('User not authorized to post new blogs.')
-    } else {
-      throw new Error(error)
-    }
+    console.log(error)
   }
 }
 
@@ -34,14 +30,10 @@ const createComment = async (newObject, id) => {
     console.log(response)
     return response.data
   } catch(error) {
-    if(error.response.status === 401) {
-      throw new Error('User not authorized to post comments.')
-    } else {
-      console.log(error)
-      throw new Error(error)
-    }
+    console.log(error)
   }
 }
+
 
 const update = async (id, newObject) => {
   console.log('new object', newObject)

@@ -20,11 +20,11 @@ blogsRouter.post('/', async (request, response, next) => {
     }
 
     const user = await User.findById(decodedToken.id)
-
+    console.log('made it here ?????????/')
     const blog = new Blog ({
-      title: body.title.value,
-      author: body.author.value,
-      url: body.url.value,
+      title: body.title,
+      author: body.author,
+      url: body.url,
       likes: body.likes,
       user: user._id
     })
@@ -43,9 +43,7 @@ blogsRouter.post('/:id/comments', async (request, response, next) => {
 
   try {
     let blog = await Blog.findById(request.params.id)
-    console.log(blog)
-    const comment = body.comment
-    blog.comments = blog.comments.concat(comment)
+    blog.comments = body.comments
     blog = await blog.save()
     response.status(201).json(blog.toJSON())
   } catch(exception) {
@@ -83,13 +81,7 @@ blogsRouter.delete('/:id', async (request, response, next) => {
 blogsRouter.put('/:id', async (request, response, next) => {
   const body = request.body
 
-  console.log('Get here???', body)
-
   const user = await User.findById(body.user.id)
-
-  console.log('HOW ABOUT HERE?')
-
-  // console.log(user, body)
 
   const blog = {
     title: body.title,
@@ -100,7 +92,7 @@ blogsRouter.put('/:id', async (request, response, next) => {
     comments: body.comments
   }
 
-  console.log('Blog before updating: ', blog)
+  console.log('Blog before updating: ', blog, request.params.id)
 
   try {
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })

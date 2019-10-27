@@ -2,7 +2,6 @@ import React from 'react'
 import { Form, Input } from 'semantic-ui-react'
 
 const CommentForm = ({ handleSubmit, comment, blog }) => {
-  console.log('Comment form:', comment, blog.id)
   return(
     <div>
       <Form onSubmit={handleSubmit}>

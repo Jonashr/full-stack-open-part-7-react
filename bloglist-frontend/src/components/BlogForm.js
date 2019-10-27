@@ -1,22 +1,40 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Form, Button, Input } from 'semantic-ui-react'
+import { addBlog } from '../reducers/blogReducer'
+import { connect } from 'react-redux'
+import { setNotification } from '../reducers/notificationReducer'
 
-const BlogForm = ({ handleSubmit, title, author, url }) => {
+const BlogForm = (props) => {
+  
+  const handleSub = async (event) => {
+    event.preventDefault()
+    const blog = {
+      title: event.target.title.value,
+      author: event.target.author.value,
+      url: event.target.url.value
+    }
+    props.addBlog(blog)
+    props.resetTitle()
+    props.resetAuthor()
+    props.resetUrl()
+    props.setNotification({message: `Blog with title ${blog.title} was added`, type: 'notification' } , 5000)
+  }
+    
   return(
     <div>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSub}>
         <Form.Field>
           <label>Title</label>
-          <Input id='title' {...title} />
+          <Input name='title' id='title' {...props.title} />
         </Form.Field>
         <Form.Field>
           <label>Author</label>
-          <Input id='author' {...author} />
+          <Input name='author' id='author' {...props.author} />
         </Form.Field>
         <Form.Field>
           <label>Url</label>
-          <Input id='url' {...url} />
+          <Input name='url' id='url' {...props.url} />
         </Form.Field>
         <Button id='create' type='submit'>Create</Button>
       </Form>
@@ -27,4 +45,8 @@ BlogForm.propTypes = {
   handleSubmit:PropTypes.func.isRequired
 }
 
-export default BlogForm
+const mapDispatchToProps = {
+  addBlog, setNotification
+}
+
+export default connect(null, mapDispatchToProps)(BlogForm)

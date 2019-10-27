@@ -2,13 +2,9 @@ import React from'react'
 import Togglable from './Togglable'
 import CommentForm from './CommentForm'
 import { connect } from 'react-redux'
-import { likeBlog } from '../reducers/blogReducer'
-
-
+import { likeBlog, deleteBlog } from '../reducers/blogReducer'
 
 const Blog = (props) => {
-  console.log('props in blog', props)
-
   const blog = props.blogs.find(bl => props.blogid === bl.id)
 
   if(blog === undefined) {
@@ -24,7 +20,7 @@ const Blog = (props) => {
             <div>{blog.user.name}</div>
       }
       {blog.user !== undefined && blog.user.username === props.user.data.username &&
-        <div><button onClick={props.handleDeleteButton} value={blog.id}>delete</button></div>
+        <div><button onClick={() => props.deleteBlog(blog.id).then(props.history.push('/'))}>delete</button></div>
       }
       <div>
         <br />
@@ -52,7 +48,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = {
-  likeBlog
+  likeBlog, deleteBlog
 }
 
 

@@ -14,6 +14,10 @@ const blogReducer = (state = [], action) => {
     console.log('Updated blog...', updatedBlog)
     return state.map(blog => blog.id !== updatedBlog.id ? blog : updatedBlog)
   }
+  case 'DELETE': {
+    return state.filter(blog => blog.id !== action.data.id)
+  }
+
   default: {
     return state
   }
@@ -33,6 +37,7 @@ export const initializeBlogs = () => {
 
 export const addBlog = (blog) => {
   return async dispatch => {
+    console.log('add blog', blog)
     const newBlog = await blogService.create(blog)
     dispatch({
       type: 'ADD_BLOG',
@@ -56,19 +61,28 @@ export const likeBlog = (blog, id) => {
   }
 }
 
-// export const vote = (id, anecdote) => {
-//   return async dispatch => {
-//     const updatedObject = {
-//       content: anecdote.content,
-//       votes: anecdote.votes + 1,
-//       id: anecdote.id
-//     }
-//     await anecdoteService.update(id, updatedObject)
-//     dispatch({
-//       type: 'VOTE',
-//       data: updatedObject
-//     })
-//   }
-// }
+export const deleteBlog = (id) => {
+
+  return async dispatch => {
+    await blogService.deleteItem(id)
+    dispatch({ 
+        type: 'DELETE',
+        data: id
+    })
+  }
+}
+
+export const addComment = (blog, id) => {
+  return async dispatch => {
+    await blogService.addComment(blog,id)
+    dispatch({
+      type: 'ADD_COMMENT',
+      data: blog
+    })
+  }
+}
+
+
+
 
 export default blogReducer

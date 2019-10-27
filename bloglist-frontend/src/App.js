@@ -12,7 +12,7 @@ import Togglable from './components/Togglable'
 import { useField } from './hooks'
 import {
   BrowserRouter as Router,
-  Route, Link,
+  Route, Link, withRouter
 } from 'react-router-dom'
 import { Menu, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
@@ -21,21 +21,19 @@ import Notification from './components/Notification'
 import { initializeBlogs } from './reducers/blogReducer'
 
 const App = (props) => {
-  const title = useField('text')
-  const author = useField('text')
-  const url = useField('text')
-  const username = useField('text')
-  const password = useField('password')
-  const comment = useField('text')
+  const [title, resetTitle] = useField('text')
+  const [author, resetAuthor] = useField('text')
+  const [url, resetUrl] = useField('text')
+  const [username, resetUsername] = useField('text')
+  const [password, resetPassword] = useField('password')
+  const [comment, resetComment] = useField('text')
   const [user, setUser] = useState(null)
   const [users, setUsers] = useState([])
-  const [blogs, setBlogs] = useState([])
-  const [counter, setCounter] = useState(0)
 
   useEffect(() => {
     console.log('App props', props)
     props.initializeBlogs()
-  }, [counter])
+  }, [])
 
   useEffect(() => {
     usersService
@@ -44,7 +42,6 @@ const App = (props) => {
         setUsers(response))
   }, [])
 
-  console.log('Users in App', users)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedInUser')
@@ -56,21 +53,7 @@ const App = (props) => {
       console.log('User ...', user)
       blogsService.setToken(user.data.token)
     }
-  }, [counter])
-
-
-
-
-  const notify = (message, type) => {
-    const notification = {
-      message: message,
-      type: type
-    }
-    console.log('Props in notify', props)
-
-    props.setNotification(notification, 5000)
-  }
-
+  }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -82,13 +65,12 @@ const App = (props) => {
       )
       blogsService.setToken(user.token)
       setUser(user)
-      username.value = ''
-      password.value = ''
-      setCounter(counter + 1)
+      resetPassword()
+      resetUsername()
     }
     catch(exception) {
       console.log('Exception caught in handle login: ', exception)
-      notify('Wrong password or username', 'error')
+      setNotification('Wrong password or username', 'error', 5000)
     }
   }
 
@@ -102,78 +84,11 @@ const App = (props) => {
 
   const handleNewComment = async (event) => {
     event.preventDefault()
-    console.log('Event value', event.target.children[1].value, comment)
     const blogId = event.target.children[1].value
-    const searchedBlog = blogs.find(b => b.id === blogId)
-    console.log('Searched blog goes here..', searchedBlog, blogId)
-    searchedBlog.comments = searchedBlog.comments.concat(comment.value)
-    console.log('SEARCHED BLOG AFTER NEW COMMENTS', searchedBlog)
-
-    await blogsService.createComment(searchedBlog, blogId)
-    setBlogs(blogs.map(blog => blog.id !== searchedBlog.id ? blog : searchedBlog))
-
-  }
-
-
-  const handleNewBlog = async (event) => {
-    event.preventDefault()
-
-    const blog = {
-      title: title,
-      author: author,
-      url: url,
-      id: blogs.length + 1
-    }
-
-    try {
-      const createdBlog = await blogsService.create(blog)
-      setBlogs(blogs.concat(createdBlog))
-    } catch(exception) {
-      console.log('Exception in handle new blog', exception)
-      notify(exception.toString(), 'error')
-    }
-
-  }
-
-  const handleLikeButton = async (event) => {
-    event.preventDefault()
-    const blogId = event.target.value
     const searchedBlog = props.blogs.find(b => b.id === blogId)
-
-    const newUpdatedBlog = {
-      user: searchedBlog.user.id,
-      likes: searchedBlog.likes + 1,
-      title: searchedBlog.title,
-      author: searchedBlog.author,
-      url: searchedBlog.url
-    }
-
-    console.log(newUpdatedBlog)
-
-    await blogsService.update(blogId, newUpdatedBlog)
-
-    setBlogs(blogs.map(blog => blog.id !== blogId ? blog : newUpdatedBlog))
-
-    setCounter(counter + 1)
-
-  }
-
-  const handleDeleteButton = async (event) => {
-    event.preventDefault()
-    if(window.confirm('Delete this blog ? ')) {
-      const blogId = event.target.value
-      const newBlogList = [...blogs]
-      const indexOfDeletedBlog = blogs.findIndex(b => b.id === blogId)
-      newBlogList.splice(indexOfDeletedBlog, 1)
-
-      notify('Blog was removed from the notebook')
-
-      await blogsService.deleteItem(blogId)
-      setCounter(counter + 1)
-      setBlogs(newBlogList)
-    }
-
-
+    searchedBlog.comments = searchedBlog.comments.concat(comment.value)
+    await blogsService.createComment(searchedBlog, blogId)
+    resetComment()
   }
 
   if(user === null) {
@@ -204,7 +119,6 @@ const App = (props) => {
                 <Button onClick={() => handleLogout()}>logout</Button>
               </Menu.Item>
             </Menu>
-
           </div>
           <h2>Blog app</h2>
           <Notification />
@@ -213,16 +127,23 @@ const App = (props) => {
               <h2>Create a new blog</h2>
               <Togglable buttonLabel='New form'>
                 <BlogForm
-                  handleSubmit={handleNewBlog}
                   title={title}
                   author={author}
-                  url={url} />
+                  url={url}
+                  resetTitle={resetTitle}
+                  resetAuthor={resetAuthor}
+                  resetUrl={resetUrl} />
               </Togglable>
               <Blogs />
             </div>
           }/>
           <Route exact path='/blogs/:id' render={({ match }) =>
-            <Blog blog={props.blogs.find(blog => blog.id === match.params.id)} blogid={match.params.id} handleLikeButton={handleLikeButton} addComment={handleNewComment} newComment={comment} user={user} />
+            <Blog
+              blog={props.blogs.find(blog => blog.id === match.params.id)} 
+              blogid={match.params.id}
+              addComment={handleNewComment} 
+              newComment={comment} 
+              user={user} />
           } />
           <Route exact path="/users">
             <Users users={users} />
@@ -234,6 +155,8 @@ const App = (props) => {
       </div>
     )
 }
+
+const WithBlog = withRouter(Blog)
 
 const mapDispatchToProps = {
   setNotification, initializeBlogs
