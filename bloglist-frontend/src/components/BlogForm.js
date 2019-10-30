@@ -1,12 +1,11 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Form, Button, Input } from 'semantic-ui-react'
 import { addBlog } from '../reducers/blogReducer'
 import { connect } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 
 const BlogForm = (props) => {
-  
+
   const handleSub = async (event) => {
     event.preventDefault()
     const blog = {
@@ -18,9 +17,9 @@ const BlogForm = (props) => {
     props.resetTitle()
     props.resetAuthor()
     props.resetUrl()
-    props.setNotification({message: `Blog with title ${blog.title} was added`, type: 'notification' } , 5000)
+    props.setNotification({ message: `Blog with title ${blog.title} was added`, type: 'notification' } , 5000)
   }
-    
+
   return(
     <div>
       <Form onSubmit={handleSub}>
@@ -39,10 +38,6 @@ const BlogForm = (props) => {
         <Button id='create' type='submit'>Create</Button>
       </Form>
     </div>)
-}
-
-BlogForm.propTypes = {
-  handleSubmit:PropTypes.func.isRequired
 }
 
 const mapDispatchToProps = {

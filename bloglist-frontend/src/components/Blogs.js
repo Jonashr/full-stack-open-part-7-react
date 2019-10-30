@@ -8,6 +8,8 @@ const Blogs = (props) => {
     return null
   }
 
+  console.log('Blogs', props.blogs)
+
 
   return(
     <div>

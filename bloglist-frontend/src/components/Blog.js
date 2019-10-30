@@ -13,6 +13,8 @@ const Blog = (props) => {
     return null
   }
 
+  console.log('Blog in blog', blog, props.user.username)
+
   return (
     <div>
       <h3>{blog.title} {blog.author}</h3>
@@ -21,8 +23,8 @@ const Blog = (props) => {
       {blog.user !== undefined && blog.user.name !== undefined &&
             <div>{blog.user.name}</div>
       }
-      {blog.user !== undefined && blog.user.username === props.user.data.username &&
-        <div><button onClick={() => props.deleteBlog(blog.id).then(props.setNotification({ message: `Blog ${blog.title} was removed`, type: 'notification' }, 5000)).then(props.history.push('/'))}>delete</button></div>
+      {blog.user !== undefined && blog.user.username === props.user.username &&
+        <div><button onClick={() => props.deleteBlog(blog.id).then(props.setNotification({ message: `Blog titled ${blog.title} was removed`, type: 'notification' }, 5000)).then(props.history.push('/'))}>delete</button></div>
       }
       <div>
         <br />

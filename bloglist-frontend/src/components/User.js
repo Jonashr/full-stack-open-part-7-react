@@ -1,17 +1,18 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
-const User = ({ user }) => {
-  if(user === undefined) {
+const User = (props) => {
+  if(props.user === undefined) {
     return null
   }
 
   return(
     <div>
-      <h3>{user.username}</h3>
+      <h3>{props.user.username}</h3>
       <h3>Added Blogs</h3>
-      {user.blogs !== undefined &&
+      {props.user.blogs !== undefined &&
           <ul>
-            {user.blogs.map(blog =>
+            {props.user.blogs.map(blog =>
               <li key={blog.id}>
                 {blog.title}
               </li>)}
@@ -21,4 +22,6 @@ const User = ({ user }) => {
   )
 }
 
-export default User
+
+
+export default connect(null, null) (User)

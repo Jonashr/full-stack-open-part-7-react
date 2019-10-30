@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import loginService from './services/login'
+import React, { useEffect } from 'react'
 import blogsService from './services/blogs'
-import usersService from './services/users'
 import Blog from './components/Blog'
 import Blogs from './components/Blogs'
 import Users from './components/Users'
@@ -19,6 +17,8 @@ import { connect } from 'react-redux'
 import { setNotification } from './reducers/notificationReducer'
 import Notification from './components/Notification'
 import { initializeBlogs } from './reducers/blogReducer'
+import { initializeUsers } from './reducers/userReducer'
+import { logout } from './reducers/loginReducer'
 
 const App = (props) => {
   const [title, resetTitle] = useField('text')
@@ -27,8 +27,6 @@ const App = (props) => {
   const [username, resetUsername] = useField('text')
   const [password, resetPassword] = useField('password')
   const [comment, resetComment] = useField('text')
-  const [user, setUser] = useState(null)
-  const [users, setUsers] = useState([])
 
   useEffect(() => {
     console.log('App props', props)
@@ -36,53 +34,12 @@ const App = (props) => {
   }, [])
 
   useEffect(() => {
-    usersService
-      .getAll()
-      .then(response =>
-        setUsers(response))
-  }, [])
-
-  console.log('State in app..', props)
-
-
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedInUser')
-    console.log('Logged user JSON', loggedUserJSON)
-
-    if(loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      console.log('User ...', user)
-      blogsService.setToken(user.data.token)
+    console.log('Initialize users...')
+    props.initializeUsers()
+    if(props.login.user !== null) {
+      blogsService.setToken(props.login.user.token)
     }
   }, [])
-
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      const user = await loginService.login({ username, password })
-
-      window.localStorage.setItem(
-        'loggedInUser', JSON.stringify(user)
-      )
-      blogsService.setToken(user.token)
-      setUser(user)
-      resetPassword()
-      resetUsername()
-    }
-    catch(exception) {
-      console.log('Exception caught in handle login: ', exception)
-      setNotification('Wrong password or username', 'error', 5000)
-    }
-  }
-
-  const handleLogout = () => {
-    window.localStorage.removeItem('loggedInUser')
-    password.reset()
-    console.log('Handle logout, password has the values', password)
-    console.log('Handle logout, username', username)
-    setUser(null)
-  }
 
   const handleNewComment = async (event) => {
     event.preventDefault()
@@ -93,15 +50,16 @@ const App = (props) => {
     resetComment()
   }
 
-  if(user === null) {
+  if(props.login.user === null) {
     return(
       <div>
         <Notification  />
         <Togglable buttonLabel='Login'>
           <LoginForm
-            handleLogin={handleLogin}
             username={username}
-            password={password} />
+            password={password}
+            resetPassword={resetPassword}
+            resetUsername={resetUsername} />
         </Togglable>
       </div>)
   } else
@@ -117,8 +75,8 @@ const App = (props) => {
                 <Link to='/users'>users</Link>
               </Menu.Item>
               <Menu.Item content>
-                <em>{user.data.name} is currently logged in</em>
-                <Button onClick={() => handleLogout()}>logout</Button>
+                <em>{props.login.user.name} is currently logged in</em>
+                <Button onClick={() => props.logout()}>logout</Button>
               </Menu.Item>
             </Menu>
           </div>
@@ -141,17 +99,17 @@ const App = (props) => {
           }/>
           <Route exact path='/blogs/:id' render={({ match }) =>
             <Blog
-              blog={props.blogs.find(blog => blog.id === match.params.id)} 
+              blog={props.blogs.find(blog => blog.id === match.params.id)}
               blogid={match.params.id}
-              addComment={handleNewComment} 
-              newComment={comment} 
-              user={user} />
+              addComment={handleNewComment}
+              newComment={comment}
+              user={props.login.user} />
           } />
           <Route exact path="/users">
-            <Users users={users} />
+            <Users />
           </Route>
           <Route exact path="/users/:id" render={({ match }) =>
-            <User user={users.find(user => user.id === match.params.id)} />
+            <User user={props.users.users.find(user => user.id === match.params.id)} />
           } />
         </Router>
       </div>
@@ -160,12 +118,15 @@ const App = (props) => {
 
 
 const mapDispatchToProps = {
-  setNotification, initializeBlogs
+  setNotification, initializeBlogs, initializeUsers, logout
 }
 
 const mapStateToProps = (state) => {
+  console.log('Map state to props in app', state)
   return {
-    blogs: state.blogs
+    blogs: state.blogs,
+    users: state.users,
+    login: state.login
   }
 }
 
