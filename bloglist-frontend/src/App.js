@@ -20,7 +20,7 @@ import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/userReducer'
 import { logout } from './reducers/loginReducer'
 
-const App = (props) => {
+const App = ({ initializeBlogs, initializeUsers, logout, blogs, users, login }) => {
   const [title, resetTitle] = useField('text')
   const [author, resetAuthor] = useField('text')
   const [url, resetUrl] = useField('text')
@@ -29,28 +29,28 @@ const App = (props) => {
   const [comment, resetComment] = useField('text')
 
   useEffect(() => {
-    console.log('App props', props)
-    props.initializeBlogs()
-  }, [])
+    console.log('App props')
+    initializeBlogs()
+  }, [initializeBlogs])
 
   useEffect(() => {
     console.log('Initialize users...')
-    props.initializeUsers()
-    if(props.login.user !== null) {
-      blogsService.setToken(props.login.user.token)
+    initializeUsers()
+    if(login.user !== null) {
+      blogsService.setToken(login.user.token)
     }
-  }, [])
+  }, [initializeUsers])
 
   const handleNewComment = async (event) => {
     event.preventDefault()
     const blogId = event.target.children[1].value
-    const searchedBlog = props.blogs.find(b => b.id === blogId)
+    const searchedBlog = blogs.find(b => b.id === blogId)
     searchedBlog.comments = searchedBlog.comments.concat(comment.value)
     await blogsService.createComment(searchedBlog, blogId)
     resetComment()
   }
 
-  if(props.login.user === null) {
+  if(login.user === null) {
     return(
       <div>
         <Notification  />
@@ -75,8 +75,8 @@ const App = (props) => {
                 <Link to='/users'>users</Link>
               </Menu.Item>
               <Menu.Item content>
-                <em>{props.login.user.name} is currently logged in</em>
-                <Button onClick={() => props.logout()}>logout</Button>
+                <em>{login.user.name} is currently logged in</em>
+                <Button onClick={() => logout()}>logout</Button>
               </Menu.Item>
             </Menu>
           </div>
@@ -99,17 +99,17 @@ const App = (props) => {
           }/>
           <Route exact path='/blogs/:id' render={({ match }) =>
             <Blog
-              blog={props.blogs.find(blog => blog.id === match.params.id)}
+              blog={blogs.find(blog => blog.id === match.params.id)}
               blogid={match.params.id}
               addComment={handleNewComment}
               newComment={comment}
-              user={props.login.user} />
+              user={login.user} />
           } />
           <Route exact path="/users">
             <Users />
           </Route>
           <Route exact path="/users/:id" render={({ match }) =>
-            <User user={props.users.users.find(user => user.id === match.params.id)} />
+            <User user={users.users.find(user => user.id === match.params.id)} />
           } />
         </Router>
       </div>
@@ -118,7 +118,7 @@ const App = (props) => {
 
 
 const mapDispatchToProps = {
-  setNotification, initializeBlogs, initializeUsers, logout
+  initializeBlogs, initializeUsers, logout
 }
 
 const mapStateToProps = (state) => {
