@@ -14,7 +14,6 @@ import {
 } from 'react-router-dom'
 import { Menu, Button } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { setNotification } from './reducers/notificationReducer'
 import Notification from './components/Notification'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/userReducer'
@@ -71,10 +70,10 @@ const App = ({ initializeBlogs, initializeUsers, logout, blogs, users, login }) 
               <Menu.Item link>
                 <Link to='/'>blogs</Link>
               </Menu.Item>
-              <Menu.Item users>
+              <Menu.Item link>
                 <Link to='/users'>users</Link>
               </Menu.Item>
-              <Menu.Item content>
+              <Menu.Item >
                 <em>{login.user.name} is currently logged in</em>
                 <Button onClick={() => logout()}>logout</Button>
               </Menu.Item>
