@@ -13,8 +13,6 @@ const Blog = (props) => {
     return null
   }
 
-  console.log('Blog in blog', blog, props.user.username)
-
   return (
     <div>
       <h3>{blog.title} {blog.author}</h3>
@@ -36,8 +34,7 @@ const Blog = (props) => {
             blog={blog}
           />
         </Togglable>
-        {console.log(blog.comments) }
-        {blog.comments.map(comment => <div>{comment}</div>)}
+        {blog.comments.map((comment, index) => <div key={index}>{comment}</div>)}
       </div>
 
     </div>

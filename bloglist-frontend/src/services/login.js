@@ -3,7 +3,6 @@ import axios from 'axios'
 const baseUrl = '/api/login'
 
 const login = async credentials => {
-  console.log('wtf')
   try {
     console.log('Credentials.. ', credentials)
     const response =  await axios.post(baseUrl, credentials)

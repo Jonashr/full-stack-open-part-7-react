@@ -4,7 +4,6 @@ const baseUrl = '/api/blogs'
 let token = null
 
 const setToken = newToken => {
-  console.log('new token', newToken)
   token = `bearer ${newToken}`
 }
 
@@ -27,18 +26,14 @@ const createComment = async (newObject, id) => {
   }
   try {
     const response = await axios.post(`${baseUrl}/${id}/comments`, newObject, config)
-    console.log(response)
     return response.data
   } catch(error) {
     console.log(error)
   }
 }
 
-
 const update = async (id, newObject) => {
-  console.log('new object', newObject)
   const response = await axios.put(`${baseUrl}/${id}`, newObject)
-  console.log('response data:', response.data)
   return response.data
 }
 

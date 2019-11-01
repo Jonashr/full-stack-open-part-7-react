@@ -10,7 +10,6 @@ import { connect } from 'react-redux'
 const LoginForm = (props) => {
   const handleSub = async (event) => {
     event.preventDefault()
-    console.log('Handle subimt in login form')
     try {
       const user = {
         username: event.target.username.value,
@@ -23,6 +22,7 @@ const LoginForm = (props) => {
       blogService.setToken(loggedUser.token)
 
       props.login(loggedUser.data)
+      props.setNotification({ message: `${user.username} Succesfully logged in`}, 2500)
       props.resetPassword()
       props.resetUsername()
     } catch(error) {

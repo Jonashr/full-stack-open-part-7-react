@@ -28,12 +28,10 @@ const App = ({ initializeBlogs, initializeUsers, logout, blogs, users, login }) 
   const [comment, resetComment] = useField('text')
 
   useEffect(() => {
-    console.log('App props')
     initializeBlogs()
   }, [initializeBlogs])
 
   useEffect(() => {
-    console.log('Initialize users...')
     initializeUsers()
     if(login.user !== null) {
       blogsService.setToken(login.user.token)
@@ -79,8 +77,8 @@ const App = ({ initializeBlogs, initializeUsers, logout, blogs, users, login }) 
               </Menu.Item>
             </Menu>
           </div>
-          <h2>Blog app</h2>
           <Notification />
+          <h2>Blog app</h2>
           <Route exact path="/" render={() =>
             <div>
               <h2>Create a new blog</h2>

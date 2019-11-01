@@ -1,13 +1,10 @@
 const user = window.localStorage.getItem('loggedInUser')
 
-console.log('Log user in login reducer', user)
-
 const loggedInUser = user !== null ? JSON.parse(user) : null
 
 const initialState = { user: loggedInUser }
 
 const reducer = (state = initialState, action) => {
-  console.log('Login reducer logging', state, action)
   switch(action.type) {
   case 'LOGIN': {
     return action.data
