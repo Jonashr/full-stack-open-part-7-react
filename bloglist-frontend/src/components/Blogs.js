@@ -1,37 +1,30 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { Table } from 'semantic-ui-react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { TableContainer, Table, Paper, TableBody, TableRow, TableCell } from '@material-ui/core'
 
-const Blogs = (props) => {
-  if(props.blogs === undefined) {
-    return null
-  }
-
-  console.log('Blogs', props.blogs)
-
+const Blogs = () => {
+  const blogs = useSelector(state => state.blogs)
 
   return(
     <div>
-      <Table striped celled>
-        <Table.Body>
-          {props.blogs.map(blog =>
-            <Table.Row key={blog.id}>
-              <Table.Cell>
-                <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-              </Table.Cell>
-            </Table.Row>
-          )}
-        </Table.Body>
-      </Table>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableBody>
+            {blogs.map(blog =>
+              <TableRow key={blog.id}>
+                <TableCell>
+                  <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    blogs: state.blogs
-  }
-}
 
-export default connect(mapStateToProps)(Blogs)
+
+export default Blogs

@@ -1,10 +1,11 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
 
-const Users = (props) => {
-  console.log('Users', props)
-  if(props.users.users === undefined) {
+const Users = () => {
+  const users = useSelector(state => state.users)
+
+  if(!users) {
     return null
   }
 
@@ -17,7 +18,7 @@ const Users = (props) => {
             <th>User</th>
             <th>Blogs created</th>
           </tr>
-          {props.users.users.map(user =>
+          {users.map(user =>
             <tr key={user.id}>
               <td><Link to={`/users/${user.id}`}>{user.username}</Link></td>
               <td>{user.blogs.length}</td>
@@ -28,10 +29,4 @@ const Users = (props) => {
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    users: state.users
-  }
-}
-
-export default connect(mapStateToProps)(Users)
+export default Users

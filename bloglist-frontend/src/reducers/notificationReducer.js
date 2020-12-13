@@ -15,7 +15,6 @@ const notificationReducer = (state = initialState, action) => {
 }
 
 export const setNotification = (notification, milliseconds) => {
-  console.log('Set notificaiton', notification)
   return async (dispatch) => {
     await dispatch( {
       type:'SET_NOTIFICATION',

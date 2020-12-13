@@ -1,30 +1,19 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { Alert }  from '@material-ui/lab'
+import { useSelector } from 'react-redux'
 
-const Notification = (props) => {
-  if(props.notification.message === '') {
+const Notification = () => {
+  const notification = useSelector(state => state.notification)
+  if(notification.message === '') {
     return null
   }
 
-  const notificationStyling = {
-    color: props.notification.type === 'error' ? 'red' : 'green',
-    fontStyle: 'italic',
-    fontSize: 25,
-    borderStyle: 'solid',
-    borderRadius: 5
-  }
-
   return(
-    <div style={notificationStyling}>
-      {props.notification.message}
-    </div>
+    <Alert severity={ notification.type === 'error' ? 'error' : 'success' }>
+      {notification.message}
+    </Alert>
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
-    notification: state.notification
-  }
-}
 
-export default connect(mapStateToProps)(Notification)
+export default Notification

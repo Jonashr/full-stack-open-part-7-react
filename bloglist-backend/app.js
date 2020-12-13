@@ -1,7 +1,6 @@
 const config = require('./utils/config')
 const express = require('express')
 const app = express()
-const bodyParser = require('body-parser')
 const cors = require('cors')
 const middleware = require('./utils/middleware')
 const blogsRouter = require('./controllers/blogs')
@@ -11,7 +10,7 @@ const mongoose = require('mongoose')
 
 const mongoUrl = config.MONGODB_URI
 
-mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false })
   .then(() => {
     console.log('Connected to MongoDB')
   })
@@ -21,13 +20,11 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
 
 app.use(cors())
 app.use(express.static('build'))
-app.use(bodyParser.json())
+app.use(express.json())
 app.use(middleware.tokenExtractor)
 
-console.log(process.env.NODE_ENV)
 
 if(process.env.NODE_ENV === 'development') {
-  console.log('testing environment ok.')
   const testingRouter = require('./controllers/testing')
   app.use('/api/testing', testingRouter)
 }

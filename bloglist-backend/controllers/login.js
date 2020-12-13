@@ -6,13 +6,10 @@ const User = require('../models/user')
 loginRouter.post('/', async(request, response) => {
   const body = request.body
 
-  console.log('Login body.', body.username)
-
-  const user = await User.findOne({ username: body.username })
-
-  console.log('User', user)
+  const user = await User.findOne({ username: body.username } )
 
   let passwordIsCorrect = false
+
   if(user !== null) {
     passwordIsCorrect =  await bcrypt.compare(body.password, user.passwordHash)
   }
@@ -28,15 +25,11 @@ loginRouter.post('/', async(request, response) => {
     id: user._id
   }
 
-  console.log('User token', userToken)
-
   const token = jwt.sign(userToken, process.env.SECRET_PASSWORD)
-  console.log('TOKEN:', token)
 
   response
     .status(200)
     .send({ token, username: user.username, name: user.name })
-
 })
 
 module.exports = loginRouter

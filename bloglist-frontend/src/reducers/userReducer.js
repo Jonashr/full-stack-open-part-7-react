@@ -11,17 +11,12 @@ const reducer = (state = [], action) => {
   }
 }
 
-
-
 export const initializeUsers = () => {
-
   return async dispatch => {
     const users = await usersService.getAll()
     dispatch({
       type: 'INITIALIZE_USERS',
-      data: {
-        users,
-      }
+      data: users
     })
   }
 }

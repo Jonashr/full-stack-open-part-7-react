@@ -12,8 +12,6 @@ usersRouter.post('/', async(request, response, next) => {
     })
   }
 
-  console.log(request.body)
-
   const user = new User({
     name: request.body.name,
     username: request.body.username,
@@ -34,7 +32,7 @@ usersRouter.get('/', async(request, response) => {
     .find({})
     .populate('blogs', { title: 1, author: 1, likes: 1 })
 
-  return response.json(users.map(user => user.toJSON()))
+  return response.status(200).json(users)
 })
 
 module.exports = usersRouter

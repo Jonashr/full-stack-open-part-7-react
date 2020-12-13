@@ -2,12 +2,16 @@ const user = window.localStorage.getItem('loggedInUser')
 
 const loggedInUser = user !== null ? JSON.parse(user) : null
 
-const initialState = { user: loggedInUser }
+const initialState = {
+  user: loggedInUser
+}
 
 const reducer = (state = initialState, action) => {
   switch(action.type) {
   case 'LOGIN': {
-    return action.data
+    return {
+      user: action.data
+    }
   }
   case 'LOGOUT': {
     return action.data
@@ -18,13 +22,11 @@ const reducer = (state = initialState, action) => {
   }
 }
 
-export const login = (loggedUser) => {
+export const login = (loggedInUser) => {
   return async dispatch => {
     dispatch({
       type: 'LOGIN',
-      data: {
-        user: loggedUser
-      }
+      data: loggedInUser
     })
   }
 }

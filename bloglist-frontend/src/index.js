@@ -2,14 +2,27 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import { Container } from 'semantic-ui-react'
 import store from './store'
 import { Provider } from 'react-redux'
+import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import { red, green } from '@material-ui/core/colors/'
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: red[500]
+    },
+    secondary: {
+      main: green[500]
+    }
+  }
+})
 
 ReactDOM.render(
-  <Container>
+  <ThemeProvider theme={theme}>
     <Provider store={store}>
       <App />
     </Provider>
-  </Container>, document.getElementById('root')
+  </ThemeProvider>
+  , document.getElementById('root')
 )

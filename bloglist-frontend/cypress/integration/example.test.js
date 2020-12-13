@@ -28,16 +28,16 @@ describe('Blog ', function() {
         .type('jonahor')
       cy.get('#password')
         .type('password')
-      cy.contains('login')
+      cy.get('#login')
         .click()
     })
 
     it('name of user is shown', function() {
-      cy.contains('Jonas Horvei is currently logged in')
+      cy.contains('jonahor Succesfully logged in')
     })
 
     it('a new blog can be added', function() {
-      cy.contains('New form')
+      cy.get('#togglable')
         .click()
       cy.get('#title')
         .type('Super cool blog')
